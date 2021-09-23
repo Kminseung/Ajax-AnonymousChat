@@ -10,6 +10,36 @@
 	<title>JSP AJAX Real Time Anonymous Chat Site</title>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.js"></script>
+	<script type="text/javascript">
+		function submitFunction() {
+			var chatName = $('#chatName').val();
+			var chatContent = $('#chatContent').val();
+			
+			$.ajax({
+				type: "POST",
+				url: "./chatSubmitServlet",
+				data : {
+					chatName: chatName,
+					chatContent: chatContent
+				},
+				success: function(result) {
+					if(result == 1) {
+						autoClosingAlert('#successMessage', 2000);
+					} else if(result == 0) {
+						autoClosingAlert('#dangerMessage', 2000);
+					} else {
+						autoClosingAlert('#warningMessage', 2000);
+					}
+				}
+			});
+			$('#chatContent').val('');
+		}
+		function autoClosingAlert(selector, delay) {
+			var alert = $(selector).alert();
+			alert.show();
+			window.setTimeout(function() {alert.hide()}, delay);
+		}
+	</script>
 </head>
 <body>
 	<div class="container">
@@ -86,6 +116,15 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="alert alert-success" id="successMessage" style="display: none">
+			<strong>메시지 전송에 성공하였습니다.</strong>
+		</div>
+		<div class="alert alert-danger" id="dangerMessage" style="display: none">
+			<strong>이름과 내용을 정확히 입력하세요.</strong>
+		</div>
+		<div class="alert alert-warning" id="warningMessage" style="display: none">
+			<strong>데이터베이스 오류가 발생했습니다.</strong>
 		</div>
 	</div>
 </body>
