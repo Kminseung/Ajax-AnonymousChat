@@ -39,6 +39,45 @@
 			alert.show();
 			window.setTimeout(function() {alert.hide()}, delay);
 		}
+		function chatListFunction(type) {
+			$.ajax({
+				type: "POST",
+				url: "./chatListServlet",
+				data : {
+					listType: type
+				},
+				success: function(data) {
+					var parsed = JSON.parse(data);
+					var result = parsed.result;
+					for(var i=0; i<result.length; i++) {
+						addChat(result[i][0].value, result[i][1].value, result[i][2].value);
+					}
+				}
+			});
+		}
+		function addChat(chatName, chatContent, chatTime) {
+			$('#chatList').append('<div class="row">' + 
+									'<div class="col-lg-12">' +  
+									'<div class="media">' + 
+									'<a class="pull-left" href="#">' +
+									'<img class="media-object img-circle" src="images/icon.JPG" alt="" width="50" height="50">' +
+									'</a>' +
+									'<div class="media-body">' +
+									'<h4 class="media-heading">' + 
+									chatName + 
+									'<span class="small pull-right">' + 
+									chatTime + 
+									'</span>' +
+									'</h4>' + 
+									'<p>' +
+									chatContent + 
+									'</p>' +
+									'</div>' + 
+									'</div>' +
+									'</div>' +
+									'</div>' +
+									'<hr>');
+		}
 	</script>
 </head>
 <body>
@@ -54,43 +93,8 @@
 							<div class="clearfix"></div>
 						</div>
 						<div id="chat" class="panel-collapse collapse in">
-							<div class="portlet-body chat-widget" style="overflow-y: auto; width: auto; height: 400px;">
-								<div class="row">
-									<div class="col-lg-12">
-										<p class="text-center text-muted small">2021년 9월 23일</p>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-12">
-										<div class="media">
-											<a class="pull-left" href="#">
-												<img class="media-object img-circle" src="images/icon.JPG" width="50" height="50">
-											</a>
-											<div class="media-body">
-												<h4 class="media-heading">홍길동
-													<span class="small pull-right">오후 7:34</span>
-												</h4>
-											</div>
-											<p>안녕하세요. 오랜만입니다. 홍길동입니다.</p>
-										</div>
-									</div>
-								</div>
-								<hr>
-								<div class="row">
-									<div class="col-lg-12">
-										<div class="media">
-											<a class="pull-left" href="#">
-												<img class="media-object img-circle" src="images/icon.JPG" width="50" height="50">
-											</a>
-											<div class="media-body">
-												<h4 class="media-heading">김철수
-													<span class="small pull-right">오후 7:36</span>
-												</h4>
-											</div>
-											<p>저도 반가워염.</p>
-										</div>
-									</div>
-								</div>
+							<div id="chatList" class="portlet-body chat-widget" style="overflow-y: auto; width: auto; height: 400px;">
+								
 							</div>
 							<div class="portlet-footer">
 								<div class="row">
@@ -127,5 +131,6 @@
 			<strong>데이터베이스 오류가 발생했습니다.</strong>
 		</div>
 	</div>
+	<button type="button" class="btn btn-default pull-right" onclick="chatListFunction('today');">추가</button>
 </body>
 </html>
